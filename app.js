@@ -1,2 +1,5 @@
+let log = require("./logger")
 let firstName = "uranus";
-console.log(firstName);
+
+// console.log(firstName);
+log.log(firstName);
