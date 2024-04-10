@@ -1,12 +1,15 @@
-const Logger = require("./logger");
-const EventEmitter = require("events");
-
-
-const logger = new Logger();
-logger.on("message logged",(args) =>{
-    console.log("message received",args);
+const http = require("http");
+const server = http.createServer((req , res) =>{
+    if(req.url === "/"){
+        res.write("hello");
+        res.end();
+    }
+    else if (req.url === "/numbers"){
+        res.write(JSON.stringify([1,2,3]));
+        res.end();
+    }
 });
-logger.log("hello");
-
+server.listen("3050");
+console.log("listening on 3050");
 
 
