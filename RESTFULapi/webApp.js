@@ -19,19 +19,38 @@ app.get("/api/posts/:id",(req,res) => {
     
 });
 app.post("/api/posts",(req,res) =>{
-    const schema =  Joi.object({
-        name : Joi.string().min(3).required()
-    });
-    const result = schema.validate(req.body);
-    if(result.error){
-        res.status(400).send(result.error);
+    const {error} = validatePosts(req.body);
+    if(error){
+        res.status(400).send(error.details[0].message);
         return;
     };
-    const post = {id : posts.length +1 , text : req.body.name};
+    const post = {id : posts.length +1 , text : req.body.text};
     posts.push(post);
     res.send(post);
 });
+app.put("/api/posts/:id",(req,res) => {
+    const post = posts.find( post => post.id === parseInt(req.params.id));
+    if (!post){
+        res.status(404).send("couldn't find this post");
+        return;
+    }
+    const {error} = validatePosts(req.body);
+    if(error){
+        res.status(400).send(error.details[0].message);
+        return;
+    };
+    post.text = req.body.text;
+    res.send(post);
+}
+
+)
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`listening on ${port}...`);
 });
+function validatePosts(post){
+    const schema =  Joi.object({
+        text : Joi.string().min(3).required()
+    });
+    return schema.validate(post);
+}
