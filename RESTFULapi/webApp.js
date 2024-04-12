@@ -1,12 +1,16 @@
 const express = require("express");
 const Joi = require("joi");
 const log = require("./logger");
+const helmet = require("helmet");
+const morgan = require("morgan");
 let posts = [{id : 1, text:"first"},{id : 2, text:"second"},{id : 3, text:"third"}];
 let app = express();
 app.use(express.json());
 app.use(log);
 app.use(express.urlencoded({extended : true}));
 // app.use(express.static("public"));
+app.use(helmet());
+app.use(morgan("tiny"));
 app.get("/", (req,res) => {
     res.send("hello");
 });
