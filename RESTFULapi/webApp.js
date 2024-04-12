@@ -5,7 +5,8 @@ let posts = [{id : 1, text:"first"},{id : 2, text:"second"},{id : 3, text:"third
 let app = express();
 app.use(express.json());
 app.use(log);
-
+app.use(express.urlencoded({extended : true}));
+// app.use(express.static("public"));
 app.get("/", (req,res) => {
     res.send("hello");
 });
