@@ -10,7 +10,12 @@ app.use(log);
 app.use(express.urlencoded({extended : true}));
 // app.use(express.static("public"));
 app.use(helmet());
-app.use(morgan("tiny"));
+
+console.log(`env : ${app.get("env")}`);
+if(app.get("env") === "development"){
+    app.use(morgan("tiny"));
+    console.log("morgan enabled");
+}
 app.get("/", (req,res) => {
     res.send("hello");
 });
