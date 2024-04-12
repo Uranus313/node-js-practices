@@ -41,9 +41,17 @@ app.put("/api/posts/:id",(req,res) => {
     };
     post.text = req.body.text;
     res.send(post);
-}
-
-)
+});
+app.delete("/api/posts/:id",(req,res) =>{
+    const post = posts.find( post => post.id === parseInt(req.params.id));
+    if (!post){
+        res.status(404).send("couldn't find this post");
+        return;
+    }
+    let index = posts.indexOf(post);
+    posts.splice(index,1);
+    res.send(post);
+})
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
     console.log(`listening on ${port}...`);
