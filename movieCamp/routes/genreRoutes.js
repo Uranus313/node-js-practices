@@ -3,7 +3,7 @@ const Joi = require("joi");
 class Genre {
     constructor(id , name){
         this.id = id;
-        this.name = name;
+        this.name = name;       
     }
 }
 const genres = [
