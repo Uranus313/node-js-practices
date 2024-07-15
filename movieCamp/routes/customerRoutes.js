@@ -1,16 +1,10 @@
 const express = require("express");
-const Joi = require("joi");
 const debug = require("debug")("app:DB");
 const mongoose = require("mongoose");
-
+const {Customer,validateCustomerPost,validateCustomerPut} = require("../models/customer");
 
 const router = express.Router();
-const customerSchema = new mongoose.Schema({
-    name : {type: String ,minlength : 3,unique : true, required : true, dropDups: true},
-    isGold: {type : Boolean , default : true},
-    phone : {type: Number , required : true }
-});
-const Customer = mongoose.model("Customer",customerSchema);
+
 async function saveCustomer(name,isGold,phone){
     const customer = new Customer({
         name: name,
@@ -108,20 +102,5 @@ router.delete("/:id",async (req,res) => {
     }
 });
 
-function validateCustomerPost(post){
-    const schema =  Joi.object({
-        name : Joi.string().min(3).required(),
-        isGold : Joi.boolean(),
-        phone : Joi.number().required()
-    });
-    return schema.validate(post);
-}
-function validateCustomerPut(post){
-    const schema =  Joi.object({
-        name : Joi.string().min(3),
-        isGold : Joi.boolean(),
-        phone : Joi.number()
-    }).min(1);
-    return schema.validate(post);
-}
+
 module.exports = router;

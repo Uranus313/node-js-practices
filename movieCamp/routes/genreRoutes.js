@@ -1,14 +1,10 @@
 const express = require("express");
-const Joi = require("joi");
 const debug = require("debug")("app:DB");
 const mongoose = require("mongoose");
-
+const {Genre,validatePosts} = require("../models/Genre");
 
 const router = express.Router();
-const genreSchema = new mongoose.Schema({
-    name : {type: String ,minlength : 3,unique : true, required : true, dropDups: true}
-});
-const Genre = mongoose.model("Genre",genreSchema);
+
 async function saveGenre(name){
     const genre = new Genre({
         name: name
@@ -96,10 +92,5 @@ router.delete("/:id",async (req,res) => {
     }
 });
 
-function validatePosts(post){
-    const schema =  Joi.object({
-        name : Joi.string().min(3).required()
-    });
-    return schema.validate(post);
-}
+
 module.exports = router;
