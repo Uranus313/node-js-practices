@@ -1,26 +1,57 @@
 const debug = require("debug")("app:DB");
+const { required } = require("joi");
 const mongoose = require("mongoose");
 debug("data base 2222");
 mongoose.connect("mongodb://localhost/playground").then(() => debug("connected")).catch(err => debug(err));
 
 const bookSchema = new mongoose.Schema({
-    name: String,
+    name: {type: String,minlength: 3, maxlength: 255, required: true},
+    category : {type: String,enum: ["digital","physical","audio"], required: true},
     author: String,
-    tags: [String],
+    tags: {
+        type: Array,
+        validate: {
+            validator : (v) =>{
+                return v && v.length > 0;
+            },
+            message: "books should have one or more tags"
+        }
+        
+        //async validation
+        // validate: {
+        //     validator : (v) =>{
+        //         return new Promise((resolve, reject) =>{
+        //             setTimeout(()=>{
+        //                 const result = v && v.length > 0;
+        //                 resolve(result);
+        //             },4000)
+        //         })
+                
+        //     },
+        //     message: "books should have one or more tags"
+        // }
+    },
     date: {type: Date, default: Date.now},
-    isPublished: Boolean
+    isPublished: Boolean,
+    price: {type: Number, min: 5, max:280, required : function(){ return this.isPublished;}}
 });
 const Book = mongoose.model("Book",bookSchema);
 
 async function saveBook(){
     const book1 = new Book({
-        name : "Percy Jackson",
+        // name : "Percy Jackson",
+        category : "k",
         author : "Rick Riordan",
-        tags : ["Adventure","Mythology"],
+        tags : [],
         isPublished : true
     });
-    const result = await book1.save();
-    debug(result);
+    try {
+        const result = await book1.save();
+        debug(result);
+
+    } catch (error) {
+        debug(error);
+    }
 }
 async function getBooks(){
     const books = await Book.find({author: "Talkin",isPublished: true})
@@ -59,7 +90,7 @@ async function deleteBook(id){
     const result = await Book.deleteMany({_id : id});
     debug(result);
 }
-// deleteBook('6693b2fa98ff84d8f0b15ad6');
+saveBook(); 
 
 
 // async function connectToDB(){
