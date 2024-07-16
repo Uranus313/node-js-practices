@@ -2,7 +2,7 @@ const express = require("express");
 const debug = require("debug")("app:DB");
 const mongoose = require("mongoose");
 const {Genre,validatePosts} = require("../models/Genre");
-
+const asyncTryCatchMiddleWare = require("../../middleware/asyncTryCatch");
 const router = express.Router();
 
 async function saveGenre(name){
@@ -37,15 +37,13 @@ async function updateGenre(id,name){
     return result;
 }
 
-router.get("/",async (req,res,next) => {
-    try {
+
+
+router.get("/",asyncTryCatchMiddleWare(async (req,res,next) => {
         const genres = await getGenres();
         res.send(genres);
-    } catch (error) {
-        // res.status(400).send(error);
-        next(error);
-    }
-});
+
+}));
 router.get("/:id",async (req,res) => {
     try {
         const genre = await getGenres(req.params.id);
