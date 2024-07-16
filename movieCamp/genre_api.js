@@ -4,8 +4,11 @@ const genreRouter = require("./routes/genreRoutes");
 const customerRouter = require("./routes/customerRoutes");
 const mongoose = require("mongoose");
 const errorMiddleware = require("../middleware/error");
+// const winston = require("winston");
+process.on("uncaughtException",() => {
+    console.log("we got an uncaught exception");
+});
 mongoose.connect("mongodb://localhost/movieCamp").then(() => debug("connected")).catch(err => debug(err));
-
 const app = express();
 app.use(express.json());
 app.use("/api/genres",genreRouter);
