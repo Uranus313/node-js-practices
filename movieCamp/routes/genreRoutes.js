@@ -37,12 +37,13 @@ async function updateGenre(id,name){
     return result;
 }
 
-router.get("/",async (req,res) => {
+router.get("/",async (req,res,next) => {
     try {
         const genres = await getGenres();
         res.send(genres);
     } catch (error) {
-        res.status(400).send(error);
+        // res.status(400).send(error);
+        next(error);
     }
 });
 router.get("/:id",async (req,res) => {
