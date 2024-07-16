@@ -5,8 +5,13 @@ const customerRouter = require("./routes/customerRoutes");
 const mongoose = require("mongoose");
 const errorMiddleware = require("../middleware/error");
 // const winston = require("winston");
-process.on("uncaughtException",() => {
-    console.log("we got an uncaught exception");
+process.on("uncaughtException",(error) => {
+    console.log("we got an uncaught exception",error);
+    process.exit(1);
+});
+process.on("unhandledRejection",(error) => {
+    console.log("we got an unhandled rejection",error);
+    process.exit(1);
 });
 mongoose.connect("mongodb://localhost/movieCamp").then(() => debug("connected")).catch(err => debug(err));
 const app = express();
