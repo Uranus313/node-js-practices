@@ -1,3 +1,4 @@
+require("express-async-errors");
 const express = require("express");
 const genreRouter = require("./routes/genreRoutes");
 const customerRouter = require("./routes/customerRoutes");

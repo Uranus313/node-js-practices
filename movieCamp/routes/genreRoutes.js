@@ -2,7 +2,6 @@ const express = require("express");
 const debug = require("debug")("app:DB");
 const mongoose = require("mongoose");
 const {Genre,validatePosts} = require("../models/Genre");
-const asyncTryCatchMiddleWare = require("../../middleware/asyncTryCatch");
 const router = express.Router();
 
 async function saveGenre(name){
@@ -39,11 +38,11 @@ async function updateGenre(id,name){
 
 
 
-router.get("/",asyncTryCatchMiddleWare(async (req,res,next) => {
+router.get("/",async (req,res,next) => {
         const genres = await getGenres();
         res.send(genres);
 
-}));
+});
 router.get("/:id",async (req,res) => {
     try {
         const genre = await getGenres(req.params.id);
